@@ -12,3 +12,5 @@ ansible-playbook -i aws_ec2.yml playbooks/nginx.yml
 
 ansible-playbook -i aws_ec2.yml playbooks/docker.yml
 
+ansible-playbook -i inventories/aws_ec2.yml playbooks/site.yml
+
