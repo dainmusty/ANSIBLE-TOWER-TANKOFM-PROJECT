@@ -1,0 +1,112 @@
+---
+# =========================
+# User and Group Management
+# =========================
+- name: Ensure groups exist
+  ansible.builtin.group:
+    name: "{{ item.group }}"
+    state: present
+  loop: "{{ users }}"
+
+- name: Ensure users exist
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    group: "{{ item.group }}"
+    shell: /bin/bash
+    create_home: yes
+  loop: "{{ users }}"
+
+- name: Deploy authorized keys (only if ssh_key is defined and not empty)
+  ansible.builtin.authorized_key:
+    user: "{{ item.name }}"
+    state: present
+    key: "{{ item.ssh_key }}"
+  loop: "{{ users }}"
+  when: item.ssh_key is defined and item.ssh_key | length > 0
+
+- name: Deploy MOTD template
+  ansible.builtin.template:
+    src: motd.j2
+    dest: "{{ motd_file }}"
+
+# =========================
+# SSH Hardening
+# =========================
+- name: Harden SSH config (only for bastion)
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^#?PasswordAuthentication"
+    line: "PasswordAuthentication no"
+  when: enable_ssh_hardening | default(false)
+
+- name: Install fail2ban (only for bastion)
+  ansible.builtin.yum:
+    name: fail2ban
+    state: present
+  when: enable_fail2ban | default(false)
+
+- name: Restart SSH service
+  ansible.builtin.systemd:
+    name: sshd
+    state: restarted
+  when: enable_ssh_hardening
+
+# =========================
+# System Updates
+# =========================
+- name: Ensure system is up to date
+  ansible.builtin.yum:
+    name: "*"
+    state: latest
+
+# =========================
+# Security Hardening
+# =========================
+- name: Install fail2ban
+  ansible.builtin.yum:
+    name: fail2ban
+    state: present
+  when: enable_fail2ban
+
+- name: Enable and start fail2ban
+  ansible.builtin.systemd:
+    name: fail2ban
+    state: started
+    enabled: yes
+  when: enable_fail2ban
+
+- name: Install auditd
+  ansible.builtin.yum:
+    name: audit
+    state: present
+  when: enable_auditd
+
+- name: Enable auditd
+  ansible.builtin.systemd:
+    name: auditd
+    state: started
+    enabled: yes
+  when: enable_auditd
+
+# =========================
+# Monitoring and Logging
+# =========================
+- name: Install CloudWatch agent (if AWS)
+  ansible.builtin.yum:
+    name: amazon-cloudwatch-agent
+    state: present
+  when: enable_cloudwatch and ansible_distribution == "Amazon"
+
+# =========================
+# Convenience Tools
+# =========================
+- name: Install essential networking tools
+  ansible.builtin.yum:
+    name:
+      - htop
+      - vim
+      - nc
+      - telnet
+      - bind-utils
+    state: present
+  when: enable_convenience_tools

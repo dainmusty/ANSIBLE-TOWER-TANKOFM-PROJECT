@@ -1,0 +1,7 @@
+---
+# Extra settings for bastion hosts
+enable_ssh_hardening: true
+enable_fail2ban: true
+enable_auditd: true
+enable_cloudwatch: true
+enable_convenience_tools: true

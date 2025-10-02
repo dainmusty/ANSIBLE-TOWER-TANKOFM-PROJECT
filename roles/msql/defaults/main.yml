@@ -1,0 +1,6 @@
+mysql_port: 3306
+# Password will come from SSM lookup
+mysql_root_password: "{{ lookup('amazon.aws.aws_ssm', '/db/secure/access', region='us-east-1') }}"
+
+# To test SSM lookup:
+# ansible localhost -m debug -a "msg={{ lookup('amazon.aws.aws_ssm', '/db/secure/access', region='us-east-1') }}"

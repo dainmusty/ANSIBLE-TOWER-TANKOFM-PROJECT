@@ -1,0 +1,37 @@
+---
+- name: Install Nginx
+  ansible.builtin.yum:
+    name: nginx
+    state: present
+
+# Optional: Uncomment if you have a custom nginx.conf template
+# - name: Deploy custom nginx.conf
+#   ansible.builtin.template:
+#     src: nginx.conf.j2
+#     dest: /etc/nginx/nginx.conf
+#   notify: Restart nginx
+
+- name: Ensure Nginx service is running
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Deploy index.html from template
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: /usr/share/nginx/html/index.html
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Verify Nginx is serving HTTP
+  ansible.builtin.uri:
+    url: "http://localhost"
+    return_content: yes
+    # Optional: add validate_certs: no if using self-signed HTTPS later
+  register: nginx_check
+
+- name: Debug Nginx response
+  ansible.builtin.debug:
+    msg: "Nginx responded with: {{ nginx_check.content }}"

@@ -1,0 +1,21 @@
+---
+- name: Install dependencies
+  ansible.builtin.yum:
+    name: ["wget", "gnupg2"]
+    state: present
+
+- name: Add Grafana repo
+  ansible.builtin.template:
+    src: grafana.repo.j2
+    dest: /etc/yum.repos.d/grafana.repo
+
+- name: Install Grafana
+  ansible.builtin.yum:
+    name: grafana
+    state: present
+
+- name: Enable and start Grafana
+  ansible.builtin.systemd:
+    name: grafana-server
+    enabled: yes
+    state: started

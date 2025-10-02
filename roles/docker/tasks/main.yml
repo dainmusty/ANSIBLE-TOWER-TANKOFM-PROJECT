@@ -1,0 +1,79 @@
+---
+# roles/docker/tasks/main.yml
+
+- name: Install Docker on Linux servers
+  block:
+
+    - name: Install dependencies on Amazon Linux 2023 / RHEL
+      ansible.builtin.yum:
+        name:
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
+          - ca-certificates
+        state: present
+      when: ansible_facts['os_family'] in ['RedHat']
+
+    - name: Add Docker repo on AL2023 / RHEL
+      ansible.builtin.yum_repository:
+        name: docker
+        description: Docker CE Stable
+        baseurl: https://download.docker.com/linux/centos/8/x86_64/stable/
+        gpgcheck: yes
+        gpgkey: https://download.docker.com/linux/centos/gpg
+        enabled: yes
+      when: ansible_facts['os_family'] in ['RedHat']
+
+    - name: Install Docker packages on AL2023 / RHEL
+      ansible.builtin.yum:
+        name:
+          - docker
+          - containerd
+        state: present
+      when: ansible_facts['os_family'] in ['RedHat']
+
+    - name: Install dependencies on Ubuntu/Debian
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        state: present
+        update_cache: yes
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Add Docker GPG key on Ubuntu/Debian
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Add Docker repository on Ubuntu/Debian
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_facts['lsb']['codename'] }} stable"
+        state: present
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Install Docker on Ubuntu/Debian
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+        update_cache: yes
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Ensure Docker service is running
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add current user to docker group
+      ansible.builtin.user:
+        name: "{{ ansible_user_id }}"
+        groups: docker
+        append: yes

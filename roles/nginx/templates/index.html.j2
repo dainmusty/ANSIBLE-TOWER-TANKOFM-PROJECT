@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Nginx Ansible Test Page</title>
+  </head>
+  <body>
+    <h1>Hello from Ansible-managed Nginx!</h1>
+    <p><b>Hostname:</b> {{ ansible_hostname }}</p>
+    <p><b>Environment:</b> {{ hostvars[inventory_hostname].tags.Environment | default('unknown') }}</p>
+    <p><b>Role:</b> {{ hostvars[inventory_hostname].tags.role | default('none') }}</p>
+    <p><i>Generated at {{ ansible_date_time.iso8601 }}</i></p>
+  </body>
+</html>

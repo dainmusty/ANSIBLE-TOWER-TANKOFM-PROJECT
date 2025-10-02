@@ -1,0 +1,7 @@
+---
+# Constants for this role (not often overridden)
+sudoers_path: "/etc/sudoers.d"
+motd_file: "/etc/motd"
+default_shell: "/bin/bash"
+
+
