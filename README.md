@@ -55,10 +55,5 @@ rm is the remove command
 -r means recursive (remove subdirectories and their contents)
 -f means force (no confirmation prompts)
 
-# use this to create the roles
-ansible-galaxy init roles/nginx
-ansible-galaxy init roles/users
-ansible-galaxy init roles/docker
-
 # use this run the plays
-ansible-playbook -i aws_ec2.yml playbooks/site.yml
+ansible-playbook -i inventories/aws_ec2.yml playbooks/site.yml

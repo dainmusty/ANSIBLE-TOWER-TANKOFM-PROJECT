@@ -1,30 +1,30 @@
 ---
 # Default list of users (safe to override elsewhere)
 extra_users:
-  - name: tee
+  - name: user1
     group: finops
     # ssh_key, ssh_keys, or old_ssh_key can be added here
     sudo: false
 
-  - name: dain
+  - name: user2
     group: netops
     sudo: false
 
-  - name: pat
+  - name: user3
     group: devsecops
     sudo: false
 
-  - name: musty
+  - name: kuks
     group: admin
     ssh_key: "{{ lookup('amazon.aws.ssm_parameter', '/users/admin/ssh_key', region='us-east-1', default='') }}"
     sudo: true
 
-  - name: nuella
+  - name: ella
     group: devops
     #ssh_key: "ssh-rsa AAAAB3Nz... alice@laptop"
     sudo: true
 
-  - name: lily
+  - name: lil
     group: finops
     #ssh_key: "ssh-rsa AAAAB3Nz... alice@laptop"
     sudo: true
@@ -33,6 +33,14 @@ extra_users:
 # Default empty sudo groups (can be overridden in inventory or Tower)
 extra_sudo_groups:
   - devops
+
+# Enable it only where needed:
+enable_ssh_hardening: true
+
+
+
+
+
 
 # use this generate ssh keys
 # ssh-keygen -t ed25519 -C "finops@example.com" -f ~/.ssh/finops
