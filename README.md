@@ -46,6 +46,15 @@ ansible-inventory -i inventories/aws_ec2.yml --graph
 # or this depending the path of your inventory file
 ansible-inventory -i aws_ec2.yml --graph
 
+
+
+
+# to remove directories 
+rm -rf ANSIBLE-TOWER-TANKOFM-PROJECT/
+rm is the remove command
+-r means recursive (remove subdirectories and their contents)
+-f means force (no confirmation prompts)
+
 # use this to create the roles
 ansible-galaxy init roles/nginx
 ansible-galaxy init roles/users
