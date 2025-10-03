@@ -1,21 +1,21 @@
 ---
-- name: Configure Nginx servers
-  hosts: role_nginx
-  become: true
-  roles:
-    - nginx
+# - name: Configure Nginx servers
+#   hosts: role_nginx
+#   become: true
+#   roles:
+#     - nginx
 
-- name: Configure Docker servers
-  hosts: role_docker
-  become: true
-  roles:
-    - docker
+# - name: Configure Docker servers
+#   hosts: role_docker
+#   become: true
+#   roles:
+#     - docker
 
-- name: Configure Bastion hosts
-  hosts: bastion
-  become: true
-  roles:
-    - users   # bastion.yml vars are loaded automatically
+# - name: Configure Bastion hosts
+#   hosts: bastion
+#   become: true
+#   roles:
+#     - users   # bastion.yml vars are loaded automatically
 
 
 - name: Configure users on all servers
@@ -25,9 +25,9 @@
     - users
 
 
-- name: Install Node Exporter
-  hosts: all
-  become: true
-  roles:
-    - node_exporter
+# - name: Install Node Exporter
+#   hosts: all
+#   become: true
+#   roles:
+#     - node_exporter
 

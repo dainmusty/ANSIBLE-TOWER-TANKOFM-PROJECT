@@ -3,7 +3,7 @@ plugin: aws_ec2
 regions:
   - us-east-1     # adjust when needed
 filters:
-  tag:Environment: dev
+  tag:env: dev
 keyed_groups:
   - key: tags.role
     prefix: role
