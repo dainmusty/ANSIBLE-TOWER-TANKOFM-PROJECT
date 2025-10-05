@@ -11,11 +11,11 @@
   roles:
     - docker
 
-- name: Configure Bastion hosts
-  hosts: install_bastion
-  become: true
-  roles:
-    - users   # bastion.yml vars are loaded automatically
+# - name: Configure Bastion hosts
+#   hosts: install_bastion
+#   become: true
+#   roles:
+#     - users   # bastion.yml vars are loaded automatically
 
 - name: Configure users on all servers
   hosts: role_users

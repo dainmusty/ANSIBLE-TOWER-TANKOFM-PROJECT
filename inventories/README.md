@@ -267,3 +267,59 @@ Key: tag:role
 Lookup type: exact
 
 Value: users
+
+
+
+Got it 👍 — the error is not from your dynamic inventory, it’s from SSH authentication when Ansible Tower tries to connect:
+
+no such identity: /home/runner/.ssh/id_rsa: No such file or directory
+Permission denied (publickey,gssapi-keyex,gssapi-with-mic)
+
+
+That means:
+
+Tower is looking for a private key (~/.ssh/id_rsa) but can’t find it.
+
+Or, the wrong user/key is being used when Tower connects to your EC2 instances.
+
+🔹 Steps to Fix in Tower
+
+Upload your EC2 SSH key as a Credential
+
+In Ansible Tower UI:
+
+Go to Resources → Credentials → Add.
+
+Name: AWS EC2 SSH Key
+
+Credential Type: Machine
+
+Username: typically ec2-user (Amazon Linux) or ubuntu (Ubuntu AMI).
+
+SSH Private Key: paste the .pem key you downloaded when creating the instance.
+
+Assign this Credential to your Job Template
+
+When you create/edit your Job Template in Tower:
+
+Under Credentials, add both:
+
+Machine credential (the EC2 SSH key you just created).
+
+(Optional) Source Control credential (GitHub PAT, if pulling playbooks from private repo).
+
+Check your inventory plugin settings
+
+Your inventories/aws_ec2.yml currently sets:
+
+hostnames:
+  - private-ip-address
+compose:
+  ansible_host: private_ip_address
+
+
+✅ This means Ansible will connect using the private IPs.
+
+If Tower runs inside AWS in the same VPC, private IP works.
+
+If Tower runs outside AWS (e.g., on your laptop), you should use public IPs:

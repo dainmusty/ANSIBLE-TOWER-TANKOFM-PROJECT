@@ -57,3 +57,20 @@ rm is the remove command
 
 # use this run the plays
 ansible-playbook -i inventories/aws_ec2.yml playbooks/site.yml
+
+
+# Once your playbook test is successful, you can now move it to Ansible Tower for testing
+1. Ansible Tower has 4 main components 
+a. Project - That's your collection of playbooks
+b. Inventory - Your managed assets
+c. Credentials - Your credentials are used to connect to your managed assets
+d. Job Templates - What enables you to run playbooks on your managed assets.
+
+# Combine scheduling with notification
+Useful for nightly backups of configuration files.
+
+# Ansible Tower Job Types
+1. Use checks to see if your env has deviated from its baseline
+
+# Privilege Escalation
+If you have set become to true, then you have check privilege escalation when defining your job templates.
