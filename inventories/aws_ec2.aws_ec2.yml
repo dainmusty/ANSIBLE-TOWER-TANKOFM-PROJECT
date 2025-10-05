@@ -10,9 +10,9 @@ keyed_groups:
   - key: tags.install
     prefix: install
 hostnames:
-  - private-ip-address
+  - public-ip-address
 compose:
-  ansible_host: private_ip_address
+  ansible_host: public_ip_address
 
 # 👇 Debug option
 strict: False
